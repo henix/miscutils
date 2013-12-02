@@ -21,7 +21,7 @@ public final class PatternCache {
 
 	public static Pattern get(String regex) {
 		// 不同步，用空间换时间
-		if (!cache.contains(regex)) {
+		if (!cache.containsKey(regex)) {
 			cache.put(regex, Pattern.compile(regex));
 		}
 		return cache.get(regex);
