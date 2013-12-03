@@ -12,18 +12,19 @@ import net.jcip.annotations.ThreadSafe;
  *
  * Usage:
  * 
- * Matcher matcher = PatternCache.get("\\d+").matcher();
+ * Matcher matcher = PatternCache.get("\\d+").matcher(str);
  */
 @ThreadSafe
 public final class PatternCache {
 
-	private static ConcurrentHashMap<String, Pattern> cache = new ConcurrentHashMap<String, Pattern>();
+	private static final ConcurrentHashMap<String, Pattern> cache = new ConcurrentHashMap<String, Pattern>();
 
 	public static Pattern get(String regex) {
-		// 不同步，用空间换时间
-		if (!cache.containsKey(regex)) {
-			cache.put(regex, Pattern.compile(regex));
+		Pattern patt = cache.get(regex);
+		if (patt == null) {
+			patt = Pattern.compile(regex);
+			cache.put(regex, patt);
 		}
-		return cache.get(regex);
+		return patt;
 	}
 }
